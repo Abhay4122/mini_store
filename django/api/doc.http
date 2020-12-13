@@ -1,0 +1,85 @@
+@hostname = http://127.0.0.1
+@port = 8000
+@host = {{hostname}}:{{port}}
+@baseUrl = {{host}}/api
+@contentType = application/json
+
+
+# @name authLogin
+POST {{baseUrl}}/token/ HTTP/1.1
+content-type: {{contentType}}
+
+{
+  "username": "admin@gmail.com",
+  "password": "admin"
+}
+
+### GET token
+
+@authToken = {{authLogin.response.body.token}}
+
+### GET all student details
+
+GET {{baseUrl}}/student
+Authorization: token {{authToken}}
+
+### GET specific student detail
+
+GET {{baseUrl}}/student?id=1
+Authorization: token {{authToken}}
+
+### Add student
+
+POST {{baseUrl}}/student
+Authorization: token {{authToken}}
+content-type: {{contentType}}
+
+{
+  "name": "Name",
+  "email": "email@gmail.com",
+  "contact": "66666666",
+  "address": "address"
+}
+
+### Delete student
+
+DELETE {{baseUrl}}/student?id=1
+Authorization: token {{authToken}}
+
+### Update student
+
+PUT {{baseUrl}}/student?id=6
+Authorization: token {{authToken}}
+content-type: {{contentType}}
+
+{
+  "name": "Name",
+  "email": "email@gmail.com",
+  "contact": "66666666",
+  "address": "address"
+}
+
+
+### Get all stores
+
+GET {{baseUrl}}/store
+Authorization: token {{authToken}}
+
+### Get specific store
+
+GET {{baseUrl}}/store?id=1
+Authorization: token {{authToken}}
+
+### Add student
+
+POST {{baseUrl}}/store
+content-type: {{contentType}}
+
+{
+  "title": "title2",
+  "owner": "owner",
+  "email": "email@12.com",
+  "store_id": "123",
+  "address": "vns",
+  "description": "This is the Description"
+}

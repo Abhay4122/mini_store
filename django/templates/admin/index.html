@@ -1,0 +1,77 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}">
+    <style>
+        .viewlink, .inlineviewlink {
+            padding-left: 35px;
+            background: url({% static "admin/img/icon-viewlink.svg" %}) 0 1px no-repeat;
+            background-position: 10px;
+        }
+
+        .addlink {
+            padding-left: 35px;
+            background: url({% static "admin/img/icon-addlink.svg" %}) 0 1px no-repeat;
+            background-position: 10px;
+        }
+
+        .changelink, .inlinechangelink {
+            padding-left: 35px;
+            background: url({% static "admin/img/icon-changelink.svg" %}) 0 1px no-repeat;
+            background-position: 10px;
+        }
+
+        .deletelink {
+            padding-left: 35px;
+            background: url({% static "admin/img/icon-deletelink.svg" %}) 0 1px no-repeat;
+            background-position: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+{% block nav-sidebar %}{% endblock %}
+
+{% block content %}
+    <div id="content-main">
+    {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+    </div>
+{% endblock %}
+
+{% block sidebar %}
+    <div id="content-related">
+        <div id="recent-actions-module">
+                <ul class="list-group">
+                    <li class="list-group-item bg-light"><p class="m-0 p-0 text-center" style="font-size: 20px; font-weight: bold;">{% translate 'Recent actions' %}</p></li>
+                    <li class="list-group-item">
+                        <h3>{% translate 'My actions' %}</h3>
+                        {% load log %}
+                        {% get_admin_log 10 as admin_log for_user user %}
+                        {% if not admin_log %}
+                            <p>{% translate 'None available' %}</p>
+                            {% else %}
+                                </li>
+                                {% for entry in admin_log %}
+                                    <li class="list-group-item py-1 {% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
+                                        {% if entry.is_deletion or not entry.get_admin_url %}
+                                            {{ entry.object_repr }}
+                                            {% else %}
+                                                <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                                        {% endif %}
+                                        <br>
+                                        {% if entry.content_type %}
+                                            <h6 class="mini quiet text-right">{% filter capfirst %}{{ entry.content_type.name }}{% endfilter %}</h6>
+                                            {% else %}
+                                                <h6 class="mini quiet text-right">{% translate 'Unknown content' %}</h6>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                </ul>
+                {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,45 @@
+<div class="row mb-3 justify-content-center">
+    <div class="col-11 box-shadow">
+        <fieldset class="module aligned {{ fieldset.classes }}">
+            {% if fieldset.name %}<h2>{{ fieldset.name }}</h2> <hr>{% endif %}
+            {% if fieldset.description %}
+                <div class="description">{{ fieldset.description|safe }}</div>
+            {% endif %}
+                {% for line in fieldset %}
+                    <div class="{% if line.fields|length_is:'1' and line.errors %} errors{% endif %}{% if not line.has_visible_field %} hidden{% endif %}">
+                        {% for field in line %}
+                            <div {% if not line.fields|length_is:'1' %} class="fieldBox{% if field.field.name %} field-{{ field.field.name }} {% endif %} {% if not field.is_readonly and field.errors %} errors{% endif %} {% if field.field.is_hidden %} hidden{% endif %}" {% endif %}>
+                                {% if not line.fields|length_is:'1' and not field.is_readonly %}{{ field.errors }}{% endif %}
+                                {% if field.is_checkbox %}
+                                    <div class="col-xl-6 float-left">
+                                        <div class="d-inline-block mt-4 pt-3 ml-3">
+                                            {{ field.field }}{{ field.label_tag }}
+                                            {% if field.field.help_text %}
+                                                <div class="help">{{ field.field.help_text|safe }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                        <div class="col-xl-6 float-left">
+                                            <div class="form-group">
+                                                {{ field.label_tag }}
+                                                {% if field.is_readonly %}
+                                                    <div class="readonly">{{ field.contents }}</div>
+                                                    {% else %}
+                                                        {{ field.field }}
+                                                {% endif %}
+                                                <!-- <input type="password" class="form-control" name="new_password1" autocomplete="new-password" required="" id="id_new_password1" aria-autocomplete="list"> -->
+                                                {% if field.field.help_text %}
+                                                    <div class="help">{{ field.field.help_text|safe }}</div>
+                                                {% endif %}
+                                                {% if line.fields|length_is:'1' %}{{ line.errors }}{% endif %}
+                                            </div>
+                                        </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+        </fieldset>
+    </div>
+</div>
