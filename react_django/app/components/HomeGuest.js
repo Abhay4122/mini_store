@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import Axios from "axios"
 import Page from "./Page"
+import base_url from "./Api"
 import Swal from "sweetalert2"
 
 function HomeGuest(props) {
@@ -10,7 +11,7 @@ function HomeGuest(props) {
   async function handleSubmit(e) {
     e.preventDefault()
     try {
-      const response = await Axios.post("http://127.0.0.1:8000/api/token/", { username: username, password: password })
+      const response = await Axios.post(`${base_url.url}token/`, { username: username, password: password })
       props.setLoggedIn(true)
       localStorage.setItem("token", response.data.token)
       Swal.fire("Success", "Successfully login!", "success")
